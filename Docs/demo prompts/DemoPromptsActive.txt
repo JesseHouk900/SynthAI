@@ -1,0 +1,40 @@
+
+!s crystal dragon resists a mages spell
+
+!l inside vaulted ceiling with ornate tapestry
+
+!c humphrey dinkleburg uses whimsical powers
+
+!scene crystal dragon resists a mages spell in a fight
+
+!land inside vaulted ornate painted ceiling with majestic tapestries 
+
+!char humphrey dinkleburg uses whimsical powers against the crystal dragon
+
+!scene crystal dragon resists a mages spell, standoff
+
+!landscape inside vaulted ornate painted ceiling with majestic tapestry lined walls, monet
+
+!character humphrey dinkleburg casts a spell on a crystal dragon
+
+!s iridescent crystal dragon glowers at enemy
+
+!l pretty dragons lair with decorative walls
+
+!c humphrey dinkleburg a mage casts a spell
+
+!s iridescent crystal dragon glowers at enemy, fish eye portrait
+
+!l pretty dragons lair with decorative walls famous paintings covering ceiling
+
+!s iridescent crystal dragon glowers at enemy, fish eye portrait, dnd manual
+
+!c humphrey dinkleburg a mage casts a whimsical spell
+
+!land renaissance building attacked by fire balls
+
+!l renaissance tower attacked by fireballs
+
+!char budget mage with staff
+
+Their mucus began to weigh down the radient dragon. As Stevely tried to fly around the wizards, he realized the true assault was the mucus itself, not the frogs.

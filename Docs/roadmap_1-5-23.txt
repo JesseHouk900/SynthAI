@@ -1,0 +1,8 @@
+-  Currently, I am commenting my code for easier reuse and pruning unnecessary bloat
+ -  Take the images generated and pass them to a moderator for NSFW check
+ -  Allow viewers to tell bot which AI to use (along with novelAI image gen 
+        functionality implementation)
+ -  Create login for main program (at this point, novelAI will likely be the only
+        story gen, AI Dungeon API seems relatively abandoned and less complex in story)
+ -  Less directed, open to suggestions
+ -  Let viewers submit images through the bot (would still go through the moderator)
