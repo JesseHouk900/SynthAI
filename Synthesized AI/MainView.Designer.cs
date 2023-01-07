@@ -80,6 +80,7 @@
             this.StoryInputTextBox.Name = "StoryInputTextBox";
             this.StoryInputTextBox.Size = new System.Drawing.Size(695, 34);
             this.StoryInputTextBox.TabIndex = 6;
+            this.StoryInputTextBox.Visible = false;
             this.StoryInputTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.StoryInputTextBox_KeyDown);
             // 
             // StoriesListBox
