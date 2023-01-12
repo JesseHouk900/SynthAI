@@ -2,12 +2,22 @@ import asyncio
 import os
 import discord
 from discord.ext import commands
+from discord.utils import get
 import random
 import synthAIBot
 from cogs.AIGenCog import AIGenCog
 import sys
 from typing import Union, Dict, Tuple, List, Any, NoReturn, Optional, Iterable
+from dotenv import load_dotenv
 _DEBUG_ = True
+load_dotenv()
+
+# token is the bot ID
+BOT_TOKEN = os.getenv("DISCORD_BOT")
+GUILD_TOKEN = os.getenv("DISCORD_GUILD")
+CHANNEL_TOKEN = os.getenv("DISCORD_CHANNEL")
+ROLE_ID_TOKEN = os.getenv("ROLE_ID")
+MOD_ID_TOKEN = os.getenv("MOD_ID")
 
 class AIGenBot(commands.Bot):
     """Bot that listens on a channel and generates an image based on the specific
@@ -29,6 +39,7 @@ class AIGenBot(commands.Bot):
         super().__init__(command_prefix = command_prefix, intents = intents)
         self.queue = asyncio.Queue()
         self.call_limiter = asyncio.Semaphore(1)
+        self.mod_limiter = asyncio.Semaphore(1)
         self.conformation_phrase_bank = [
             "Heard!",
             "Roger, Roger",
@@ -72,7 +83,7 @@ class AIGenBot(commands.Bot):
             async with self.call_limiter:
                 self.lID, file_name = await get_image_and_update_id(input_, "landscape", self.lID)
             
-                await self.send_image_ready_message(file_name)
+                await self.send_image_to_mod(ctx = ctx, file_name = file_name)
                 
     async def _character(self, ctx: commands.Context, text: List):
         """The command for character. Read discord message, check channel, confirm
@@ -88,7 +99,7 @@ class AIGenBot(commands.Bot):
             async with self.call_limiter:
                 self.cID, file_name = await get_image_and_update_id(input_, "character", self.cID)
 
-                await self.send_image_ready_message(file_name)
+                await self.send_image_to_mod(ctx = ctx, file_name = file_name)
         
     async def _scene(self, ctx: commands.Context, text: List):
         """The command for scene. Read discord message, check channel, confirm
@@ -104,7 +115,7 @@ class AIGenBot(commands.Bot):
             async with self.call_limiter:
                 self.sID, file_name = await get_image_and_update_id(input_, "scene", self.sID)
 
-                await self.send_image_ready_message(file_name)
+                await self.send_image_to_mod(ctx = ctx, file_name = file_name)
 
     def convert_to_prompt(self, text: List):
         """Take a discord text component and process it into a single string
@@ -148,27 +159,73 @@ class AIGenBot(commands.Bot):
                 random.randrange(0, len(self.conformation_phrase_bank))]
         await ctx.send(message)
 
+    async def modTest(self, ctx: commands.Context, text):
+        input = self.convert_to_prompt(text).strip(" ")
+        file_name = ""
+        if (input == "s"):
+            file_name = "scene0.jpg"
+        elif (input == "l"):
+            file_name = "landscape0.jpg"
+        elif (input == "c"):
+            file_name = "character0.jpg"
+        else:
+            file_name = input
+        await self.send_image_to_mod(ctx = ctx, file_name = file_name)
+
     async def send_image_to_mod(self, ctx: commands.Context, file_name: str):
         # get roles
-        #self.guilds
-        # determine target role
-        # get all members of role
+        guilds = self.guilds
+        members = []
+        send_pic = False
+        msg = discord.Message
+        # await ctx.send("ROLE_ID_TOKEN: " + ROLE_ID_TOKEN)
+        # await ctx.send("GUILD_TOKEN: " + GUILD_TOKEN)
+        for g in guilds:
+            if (str(GUILD_TOKEN) == str(g.id)):
+                for r in g.roles:
+                    # determine target role
+                    # await ctx.send("Role: " + str(r.id))
+                    if (str(r.id) == str(ROLE_ID_TOKEN)):
+                        # get all members of role
+                        members = r.members
+                        break
+                break
+        # await ctx.send(len(members))
         # pick one
-        # send image to them
-        ##await user.send(file=discord.File(file_name))
-        # wait for confirmation
+        mod = members[random.randrange(len(members))]
+        async with self.mod_limiter:
+            # send image to them
+            await mod.send(file=discord.File(file_name))
+            # wait for confirmation
+            msg = await self.wait_for('message', check=self.DM_channel_check(mod))
+        #await mod.send(msg.content)
         # process responce
+        if (msg.content == "Y" or msg.content == "y"):
+            await mod.send("Great")
+            send_pic = True
+        elif(msg.content == "N" or msg.content == "n"):
+            await mod.send("Oh no!")
+            send_pic = False
         # send image to correct channel or dont
-        pass
+        if (send_pic):
+            await self.send_image_ready_message(file_name)
 
-    async def send_image_ready_message(file_name: str):
+    async def send_image_ready_message(self, file_name: str):
         """print to console the name of the image
 
         Args:
             file_name (str): name of image
         """
         if (_DEBUG_):
-            print(file_name, file=sys.stderr)
+            print(file_name, file=sys.stderr, flush=True)
+
+    def DM_channel_check(self, user: discord.User):
+        def inner_check(message: discord.Message):
+            if (message.author == user and message.channel.id == user.dm_channel.id):
+                return True
+            else:
+                return False
+        return inner_check
 
     async def handle_queue(self, ctx: commands.Context, text: List):
         """Get next in the queue, await the execution of the function, and signal

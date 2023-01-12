@@ -28,5 +28,11 @@ class AIGenCog(commands.Cog):
 
         await self.bot.handle_queue(ctx, text)
         
+    @commands.command(name = "modTest", aliases=["m"], pass_context = True)
+    async def modTest(self, ctx: commands.Context, *text):
+        self.bot.queue.put_nowait(self.bot.modTest)
+
+        await self.bot.handle_queue(ctx, text)
+
 def setup(bot):
     bot.add_cog(AIGenBot(bot))

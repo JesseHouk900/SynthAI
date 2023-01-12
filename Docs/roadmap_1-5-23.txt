@@ -1,5 +1,7 @@
--  Currently, I am commenting my code for easier reuse and pruning unnecessary bloat
+-  Currently, I am commenting my code for easier reuse and pruning unnecessary bloat X?
  -  Take the images generated and pass them to a moderator for NSFW check
+  -  Refactor code for reusability and readability
+  -  Make UI for setting variables
  -  Allow viewers to tell bot which AI to use (along with novelAI image gen 
         functionality implementation)
  -  Create login for main program (at this point, novelAI will likely be the only

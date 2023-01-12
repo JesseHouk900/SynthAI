@@ -7,12 +7,15 @@ from dotenv import load_dotenv
 #from synthAIBot import generate_story_image
 import AIGenBot
 
-print("Discord bot initiating")
+print("Discord bot initiating", flush=True)
 load_dotenv()
 
 # token is the bot ID
-TOKEN = os.getenv("DISCORD_TOKEN")
-CHANNEL = os.getenv("DISCORD_CHANNEL")
+BOT_TOKEN = os.getenv("DISCORD_BOT")
+GUILD_TOKEN = os.getenv("DISCORD_GUILD")
+CHANNEL_TOKEN = os.getenv("DISCORD_CHANNEL")
+ROLE_ID_TOKEN = os.getenv("ROLE_ID")
+MOD_ID_TOKEN = os.getenv("MOD_ID")
 
 
 action_queue = {}
@@ -22,7 +25,7 @@ intents = discord.Intents.all()
 bot = AIGenBot.AIGenBot(
     command_prefix = '!', 
     intents = intents,
-    channel = CHANNEL)
+    channel = CHANNEL_TOKEN)
 
 
-bot.run(TOKEN)
+bot.run(BOT_TOKEN)
