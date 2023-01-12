@@ -31,20 +31,26 @@ namespace Synthesized_AI
         public string promptTextColor;
         public string editTextColor;
         public FileSystemWatcher fileSystemWatcher;
-        private Process discordBotProcess;
+        public Process discordBotProcess;
+        public Form settingsForm;
 
         public MainView()
         {
             InitializeComponent();
+            InitializeOtherForms();
             pythonPath = JHPersonalCollection.Environment.GetPythonPath();
             craiyonBotFileName = "../../synthAIBot.py";
             novelAIBotFileName = "../../synthAIBot.py";
             TestOutputBox.Text = craiyonBotFileName;
             selectedStoryAIAPI = "novelai";
             SetTextColors();
-            
+
             StartDiscordBot();
-            
+
+        }
+        private void InitializeOtherForms()
+        {
+            settingsForm = new SettingsForm(this);
         }
         /// <summary>
         /// Gets the names of the stories from the set story AI API and puts
@@ -468,7 +474,18 @@ namespace Synthesized_AI
         /// <param name="e"></param>
         private void MainView_FormClosing(object sender, FormClosingEventArgs e)
         {
-            discordBotProcess.Kill();
+            if (discordBotProcess != null && !discordBotProcess.HasExited)
+            {
+                discordBotProcess.Kill();
+            }
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            settingsForm.SetDesktopLocation(this.DesktopLocation.X, this.DesktopLocation.Y);
+            settingsForm.Show();
+
         }
     }
 }

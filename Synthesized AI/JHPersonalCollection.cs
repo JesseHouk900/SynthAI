@@ -244,4 +244,33 @@ namespace JHPersonalCollection
             }
         }
     }
+
+    internal class DataManip
+    {
+        public static T[,] RemoveLastRowFrom2DArray<T>(T[,] arr)
+        {
+            T[,] newArr = new T[arr.GetLength(0) - 1, arr.GetLength(1)];
+            for (var row = 0; row < arr.GetLength(0) - 1; row++)
+            {
+                for (var col = 0; col < arr.GetLength(1); col++)
+                {
+                    newArr[row, col] = arr[row, col];
+                }
+            }
+            return newArr;
+        }
+
+        public static T[,] RemoveFirstRowFrom2DArray<T>(T[,] arr)
+        {
+            T[,] newArr = new T[arr.GetLength(0) - 1, arr.GetLength(1)];
+            for (var row = 0; row < arr.GetLength(0) - 1; row++)
+            {
+                for (var col = 0; col < arr.GetLength(1); col++)
+                {
+                    newArr[row, col] = arr[row + 1, col];
+                }
+            }
+            return newArr;
+        }
+    }
 }
